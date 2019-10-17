@@ -1,0 +1,25 @@
+.custom-tile ul {
+    margin: 0px;
+    padding: 0px;
+}
+.custom-tile li.active {
+    background: #103a46;
+    color: #ffffff;
+}
+
+.custom-tile ul li{
+    list-style: none;
+    text-decoration: none;
+    text-align: center;
+    float: left;
+    padding: 5px;
+    margin: 5px;
+    border: 1px solid #C4C0C0;
+    border-radius: 10px;
+    min-width: 50px;
+    color: #2b3840;
+	background-color: #bbd4f1;
+}
+.custom-tile input{
+    width: 100%;
+}

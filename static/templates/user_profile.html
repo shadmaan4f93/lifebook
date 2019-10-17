@@ -1,0 +1,15 @@
+<div class="custom-container">
+    <div class="row">
+        <div class="col-sm-12 shadow" style="box-shadow:0px 0px 5px 0px">
+            <div class="user-profile">
+                <ul ng-controller="User_profile" ng-init="init(); ">                                   
+                    <li ng-repeat="list in getUserProfile">
+                        <img src="static/Images/avatar5.png" width="250" height="250" class="img-circle" alt="User Image"/>
+                        <h3 class="users-list-name" href="#">{{ list.username }} {{ list.Name }}</h3>
+                        <span class="users-list-date">{{list.email}}</span>
+                    </li>     
+                </ul>
+            </div>
+        </div>
+    </div>  
+</div>

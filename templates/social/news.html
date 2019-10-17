@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+                  
+<section class="content" ng-app="myApp">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Please share latest news that can help others</h3>
+                </div>
+                <div class="box-body">
+                    <form method="post" enctype="multipart/form-data" class="news_form">
+                        {% csrf_token %}
+                        <label>News title</label>
+                        {{ form.title }}
+                        {{ form.news_detail }}
+                        <button class="btn btn-block btn-info btn-flat" type="submit">SUBMIT</button>                        
+                    </form>
+                </div>  
+                <div class="tab">
+                    <button class="tablinks" onclick="openCity(event, 'London')">Google news</button>
+                    <button class="tablinks" onclick="openCity(event, 'Paris')">Site news</button>
+                    <button class="tablinks" onclick="openCity(event, 'Tokyo')">Weather</button>
+                </div>
+                  
+                <div id="London" class="tabcontent">                 
+                    {% verbatim %} 
+                    <div class="box box-widget news_img"  ng-controller="newscontroller" ng-init="init();"> 
+                        <div ng-repeat="list in getnews">
+                            <div ng-if="list.title" class="box-header with-border">
+                            <a href="{{list.url}}"> <h3> {{list.title}}</h3></a>  
+                            </div>
+                            <div class="box-body">
+                                <div class="col-sm-6">
+                                    <h4 ng-if="list.description">{{list.description}}</h4><br/>                                                          
+                                <span ng-if="list.author">Author: {{list.author}} </span>
+                                <h4> Published At: {{list.publishedAt | date :  "dd.MM.y"}}</h4>
+                                <h3 ng-if="list.source.name">{{list.source.name}}</h3>
+                                
+                                </div>
+                                <div ng-if="list.urlToImage" class="col-sm-6">
+                                    <img src="{{list.urlToImage}}" width="400", height="300"/>
+                                </div>                            
+                            </div>
+                        </div>          
+                    </div>
+                    {% endverbatim %}
+                </div>
+                <div id="Tokyo" class="tabcontent">
+                        <div class="box-body">
+                            <div my-map=""></div>
+                            <div id="map" style="height:300px"></div>
+                            <script src="{% static "js/map.js" %}"></script>
+                            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCX03rRy8YH_WKXN523KvPGFA1E1uBQbQA&callback=initMap"></script>
+                            {% verbatim %}
+                            <div class="col-sm-12 weather_info" ng-controller="weathercontroller" ng-init="init();">          
+                                <div class="col-sm-4">
+                                    <table style="width:100%">
+                                        <tr><th><h4>Wind information</h4></th></tr>
+                                        <tr>
+                                            <td>speed :</td><td>{{getweather.wind.speed}} &nbsp; meter/sec</td>                    
+                                        </tr>
+                                        <tr>
+                                            <td>Degree :</td><td>{{getweather.wind.deg}} &nbsp; degree</td>                                                                                  
+                                        </tr>
+                                        <tr>
+                                            <td>Gust :</td><td>{{getweather.wind.deg}} &nbsp; degree</td>  
+                                        </tr>
+                                    </table>                                                                         
+                                </div>
+                                <div class="col-sm-4">
+                                    <table style="width:100%">
+                                        <tr><th><h4>Tempreture information</h4></th></tr>
+                                        <tr>
+                                            <td>temp :</td><td>{{getweather.main.temp-273.15 | number:2}}&nbsp; &#8451;</td>                    
+                                        </tr>
+                                        <tr>
+                                            <td>temp_min :</td><td>{{getweather.main.temp_min-273.15 | number:2}} &nbsp; &#8451;</td>                                                                                  
+                                        </tr>
+                                        <tr>
+                                            <td>temp_max :</td><td>{{getweather.main.temp_max-273.15 | number:2}}&nbsp;	&#8451;</td>  
+                                        </tr>
+                                        <tr>
+                                            <td>pressure :</td><td>{{getweather.main.pressure}} &nbsp; hPa</td>  
+                                        </tr>
+                                        <tr>
+                                            <td>humidity :</td><td>{{getweather.main.humidity}} &nbsp;%</td>  
+                                        </tr>
+                                    </table>                                                             
+                                </div>
+                                <div class="col-sm-4">
+                                        <strong>{{getweather.name}} </strong>  
+                                    <div ng-repeat="weather in weatherinfo">                                       
+                                        <img src="/static/Images/{{weather.icon}}.png" width="100",height="100"/>   
+                                        <h4> {{weather.description}}</h4>                                 
+                                    </div>
+                                </div>
+                            </div> 
+                            {% endverbatim %}              
+                        </div>      
+                    </div>                
+                <div id="Paris" class="tabcontent">
+                    {% for news in newses %}   
+                    <div class="box box-widget">   
+                        <div class="box-header with-border">
+                            <h3>{{news.title}}</h3>
+                        </div>
+                        <div class="box-body">
+                            {{news.news_detail |safe}}
+                        </div>
+                    </div>
+                    {%endfor%}
+                </div>                                 
+                <script>
+                  function openCity(evt, cityName) {
+                      var i, tabcontent, tablinks;
+                      tabcontent = document.getElementsByClassName("tabcontent");
+                      for (i = 0; i < tabcontent.length; i++) {
+                          tabcontent[i].style.display = "none";
+                      }
+                      tablinks = document.getElementsByClassName("tablinks");
+                      for (i = 0; i < tablinks.length; i++) {
+                          tablinks[i].className = tablinks[i].className.replace(" active", "");
+                      }
+                      document.getElementById(cityName).style.display = "block";
+                      evt.currentTarget.className += " active";
+                  }
+                </script>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
+
+ 

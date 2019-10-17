@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+    <div class="box box-success">
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-sm-12 shadow" style="box-shadow:0px 0px 5px 0px">
+                    <div class="user-profile">
+                        {% verbatim %}
+                        <ul ng-app="myApp" ng-controller="User_profile" ng-init="init(); ">                                   
+                            <li ng-repeat="list in getUserProfile">
+                                <img src="/static/Images/user2-160x160.jpg" width="250" height="250" class="img-circle" alt="User Image"/>
+                                <h3 class="users-list-name" href="#">{{ list.username }} {{ list.Name }}</h3>
+                                <span class="users-list-date">{{list.email}}</span>
+                            </li>     
+                        </ul>
+                        {% endverbatim %}
+                        <a href="/accounts/Profile-update/" class="btn btn-success" type="button">Edit Profile</a>
+                    </div>
+                </div>
+            </div>  
+        </div>    
+    </div>
+</div>
+{% endblock %}
+
+
+
+ 

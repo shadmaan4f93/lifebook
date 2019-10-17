@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<section class="content">
+  <div class="row">
+    <div class="col-sm-9">
+      <!-- ----------------------------------------------Post form----------------------------------------------------------- -->
+      <div class="box box-success">           
+        <div class="box-header with-border">
+          <h3 class="box-title">Write somthing here</h3>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <div class="col-md-2 co-sm-2">
+                {% if user.profile.image %}
+                <img src="/media/{{user.profile.image}}" width="50" height="50" class="img-circle" alt="User Image"/>
+                {% else %}       
+                <img src="/media/user/default_male.PNG" width="50" height="50" class="img-circle" alt="User Image"/>
+                {% endif %}
+              </div>
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-md-8 col-sm-8">
+                  {{ form.user_post_description }}                                            
+                </div>
+                <div class="col-md-2 col-sm-2">
+                  <button class="btn btn-success" type="submit">POST</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-----------------------------------------USER POST------------------------------------------------------>
+      <div class="box box-info">
+        <div class="box-body">
+          {% for p in Post %}
+            <div class="box box-widget">
+              <div class="box-header with-border">
+                <div class="user-block">
+                  <img class="img-circle" src="/static/Images/user2-160x160.jpg" alt="User Image">
+                  <span class="username"><a href="#">{{p.posted_by}}</a></span>
+                  <span class="description">Shared publicly - {{p.posted_date}}</span>
+                </div>                  
+                <div class="box-tools">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-info btn-flat dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-align-right"></i>                   
+                    </button>
+                    <ul class="dropdown-menu" style="right: 0;" role="menu">
+                      <li><a href="#">Action1</a></li>
+                      <li><a href="#">Action1</a></li> 
+                      {% if p.posted_by == request.user%}         
+                      <li class="divider"></li>                
+                      <li><a href="{% url 'social:delete_post' p.pk %}">Delete</a></li>
+                      <li><a href="{% url 'social:delete_post' p.pk %}">Edit</a></li>
+                      {% endif %}
+                    </ul>
+                  </div>
+                  
+                </div>
+              </div>     
+              <div class="box-body">
+                {{ p.user_post_description|safe }}              
+                <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
+                <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
+                <span class="pull-right text-muted">127 likes - 3 comments</span>
+              </div>
+              <div class="box-footer box-comments">
+                <div class="box-comment">                     
+                  <img class="img-circle img-sm" src="/static/Images/user2-160x160.jpg" alt="User Image">    
+                    <div class="comment-text">
+                      <span class="username">
+                        Maria Gonzales
+                        <span class="text-muted pull-right">8:03 PM Today</span>
+                      </span>
+                        It is a long established fact that a reader will be distracted
+                        by the readable content of a page when looking at its layout.
+                    </div>
+                </div>                   
+              </div>
+              <div class="box-footer">
+                <form action="#" method="post">
+                  <img class="img-responsive img-circle img-sm" src="/static/Images/user2-160x160.jpg" alt="Alt Text">                  
+                    <div class="img-push">
+                        <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+                    </div>
+                </form>
+              </div>        
+            </div>
+          {% endfor %}  
+        </div>
+        <div class="box-footer clearfix">
+          <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat">View All Post</a>
+        </div>       
+      </div>    
+    </div>
+    <div class="col-sm-3">  
+      <!-- -----------------------------------------Friends LIST -------------------------------------------------------->
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">Friends</h3>        
+          <div class="box-tools pull-right">
+            <span class="label label-danger">{{ Users|length }} New Members</span>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div> 
+        <div class="box-body friend_list"> 
+          <table>
+              {% for list in Friends %}           
+            <tr>
+              <td><img src="static/Images/avatar5.png" width="50" height="50" class="img-circle" alt="User Image"/></td>
+              <td><a href="{% url 'accounts:Friend_Profile' pk=list.pk %}"><h3>{{ list.first_name }}</h3></a></td>
+            </tr>  
+            {% endfor %}   
+          </table>                    
+        </div>
+        <div class="box-footer text-center">
+          <a href="javascript:void(0)" class="uppercase">View All Users</a>
+        </div>
+      </div>     
+    </div>
+  </div>
+</section>
+{% endblock %}
+

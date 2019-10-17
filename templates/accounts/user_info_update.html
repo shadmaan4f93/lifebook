@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+    label{
+        color: #cccccc;
+        padding-top: 10px;
+    }
+    .thumbnail_container .close {
+  position: absolute;
+  top: 15px;
+  right: 0px;
+}
+
+.thumbnail_container {
+  position: relative;
+  background: #d6d6d6;
+  display: table;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.thumbnail_container img {
+  display: table-cell;
+  height: 50px;
+  width: 50px
+}
+
+.thumbnail_container span {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+}
+/* .image_field{
+    background-color: #b0cfae;
+    padding: 10px;
+    width: 350px;
+    color: #ffff;
+}
+.image_field a{
+    color: #ffff
+}
+.image_field label{
+    color: #ffff
+} */
+input[type=file] {
+    display: none;
+}
+.image_btn{
+    font-size: 30px;
+}
+</style>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <form method="post" class="login" enctype="multipart/form-data">
+                        {% csrf_token %}           
+                        <div class="form-group">
+                            <label>{{ form.profession.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
+                                {{ form.profession }}
+                            </div>
+                            <label>{{ form.location.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
+                                {{ form.location }}
+                            </div>
+                            <label>{{ form.skils.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-puzzle-piece"></i>
+                                </div>
+                                {{ form.skils }}
+                            </div>
+                            <label>{{ form.education.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-mortar-board"></i>
+                                </div>
+                                {{ form.education }}
+                            </div>
+                            <label>{{ form.edu_center.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-university"></i>
+                                </div>
+                                {{ form.edu_center }}
+                            </div>
+                            <label>{{ form.linkedin_profile.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-linkedin"></i>
+                                </div>
+                                {{ form.linkedin_profile }}                               
+                            </div>
+                            <label>{{ form.twitter_profile.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-twitter"></i>
+                                </div>
+                                {{ form.twitter_profile }}
+                            </div>
+                            <label>{{ form.facebook_profile.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-facebook"></i>
+                                </div>
+                                {{ form.facebook_profile }}                              
+                            </div>
+                            <label>{{ form.birth_date.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                {{ form.birth_date }}                           
+                            </div>
+                            <label>{{ form.bio.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+                                {{ form.bio }}                         
+                            </div>     
+                            <div class="image_field">
+                                <label for="{{ form.image.id_for_label }}" class="fa fa-camera image_btn">Chose image</label>
+                                {{ form.image.errors }}
+                                {{ form.image }}
+                            </div>              
+                        </div>                      
+                        <input type="submit" class="btn btn-block btn-info btn-flat" value="Update"/> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+$('.input-group input').attr( "class", "form-control" );
+$('#id_image').attr( "class", "fa fa-camera" );
+
+$("#id_image").change(file_display (id='#id_image'));
+    function file_display(id) {
+    // --- event to display image thumbnail adjacent to file upload control.
+    $(id).change(function() {
+        var reader = new FileReader();
+        var fileupload_element = $(this);
+        reader.onload = function(event) {
+            var ext = $(id)[0].files[0].name.split('.').pop();
+            var file_name = $(id)[0].files[0].name;
+
+            if (file_name.length >= 15) {
+                file_name = file_name.substring(0, 15) + '...'
+            }
+            var file_src = event.target.result
+            var icon_class = ''
+            var element_tag = '<span class="[[thumbnail_icon]]"></span>';
+            var thumbnail_container = '<div class="thumbnail_container col-sm-4">[[element_tag]]<span>' +
+                file_name + '</span><span class="close"></span></div>'
+
+            switch (ext.toLowerCase()) {
+                case "png":
+                case "jpeg":
+                case "bmp":
+                case "gif":
+                case "jpg":
+                    element_tag = ' <img src="[[file_src]]" />'
+                    break;
+                case "pdf":
+                    icon_class = 'fa fa-file-pdf-o fa-3x'
+                    break;
+                case "doc":
+                case "docx":
+                    icon_class = 'fa fa-file-word-o fa-3x'
+                    break;
+                default:
+                    icon_class = 'fa fa-file fa-3x'
+                    break;
+            };
+
+            thumbnail_container = thumbnail_container.replace('[[element_tag]]', element_tag);
+            thumbnail_container = thumbnail_container.replace('[[file_src]]', file_src);
+            thumbnail_container = thumbnail_container.replace('[[thumbnail_icon]]', icon_class);
+            $(".thumbnail_container").remove()
+
+            fileupload_element.parent().append(thumbnail_container);
+
+            $(".thumbnail_container .close").click(function(e) {
+                $(id)[0].value = '';
+                $(this).parent().remove();
+            });
+        }
+        reader.readAsDataURL($(id)[0].files[0]);
+    });
+}
+</script>
+{% endblock %}

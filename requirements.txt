@@ -1,0 +1,17 @@
+beautifulsoup4
+bootstrap3-datetime
+certifi
+chardet
+Django
+django-appconf
+django-crispy-forms
+django-mediumeditor
+djangorestframework
+idna
+Pillow
+pytz
+requests
+six
+soupsieve
+sqlparse
+urllib3

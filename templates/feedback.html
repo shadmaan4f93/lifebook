@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="addthis_inline_share_toolbox">
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-595caeea2a4fbf50"></script>
+  </div>
+<div class="content">
+    <div class="box box-success">
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-sm-12 shadow" style="box-shadow:0px 0px 5px 0px">
+                    <h1>Feedback</h1>
+                    <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="form-actions">
+                    <button type="submit">Send</button>
+                    </div>
+                    </form>
+                </div>
+            </div>  
+        </div>    
+    </div>
+</div>
+{% endblock %}
+

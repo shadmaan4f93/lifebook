@@ -1,0 +1,62 @@
+{% extends "accounts/accounts.html" %}
+{% block content %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<form method="post" class="login100-form vaalidte-form">            
+                {% csrf_token %}           
+					<span class="login100-form-title p-b-43">
+                        <div class="text-shadow-normal" >
+                            <h2>Sign Up</h2>
+                        </div>					
+					</span>
+					<span class="error-message">{{ form.non_field_errors }}</span>
+					
+					<div class="wrap-input100 validate-input">
+                        {{ form.username }}
+						<span class="focus-input100"></span>
+						<span class="label-input100">{{ form.username.label }}</span>
+                    </div>	
+                    <div class="wrap-input100 validate-input">
+                        {{ form.first_name }}
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">{{ form.first_name.label }}</span>
+                    </div>
+                    <div class="wrap-input100 validate-input">
+                        {{ form.last_name }}
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">{{ form.last_name.label }}</span>
+                    </div>
+                    <div class="wrap-input100 validate-input">
+                        {{ form.email }}
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">{{ form.email.label }}</span>
+                    </div>
+                    <div class="wrap-input100 validate-input">
+                        {{ form.password1 }}
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">{{ form.password1.label }}</span>
+                    </div>	
+					<div class="wrap-input100 validate-input">
+                        {{ form.password2 }}		
+						<span class="focus-input100"></span>
+						<span class="label-input100">{{ form.password2.label }}{{ form.password2.errors }}</span>
+					</div>		
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Sign Up
+						</button>
+					</div>					
+					<div class="text-center p-t-46 p-b-20">
+                        <p>
+                            Allready a member?
+                        </p>
+                        <a href="{% url 'accounts:login' %}" class="to_register">Sign In</a>
+					</div>			
+				</form>
+				<div class="login100-more" style="background-image: url('/static/Images/bg-01.jpg');">
+				</div>
+			</div>
+		</div>
+    </div>
+{% endblock %}

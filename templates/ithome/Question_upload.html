@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="custom-container">
+<div class="icon-center">
+    <img src="{% static "Images/contact-us-pink.png" %}" alt="My image"/>
+    <h1>Question</h1>
+</div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="col-sm-8">
+                <div class="custom-form">
+                    <label for="{{ form.Subject_name.id_for_label }}">{{ form.Subject_name.label }}</label>
+                    {{ form.Subject_name.errors }}
+                    {{ form.Subject_name }}
+                    <label class='help-text'>{{ form.Subject_name.help_text }}</label>
+                </div>
+                    <div class="custom-form">
+                        <label for="{{ form.question.id_for_label }}">{{ form.question.label }}</label>
+                        {{ form.question.errors }}
+                        {{ form.question }}
+                        <label class='help-text'>{{ form.question.help_text }}</label>
+                    </div>
+                    <div class="custom-form">
+                        <label for="image">{{ form.image.label }}</label>
+                        {{ form.image.errors }}
+                        <label for="id_image" class="button">{{ form.image.help_text }}
+                        </label>
+                        {{ form.image }}
+                    </div>
+
+                    <button class="button-primarry" type="submit">SUBMIT</button>
+                </div>
+        </div>
+    </div>
+    
+    
+  </form>
+</div>
+<script>
+    $("#id_image").change(file_display (id='#id_image'));
+    function file_display(id) {
+    // --- event to display image thumbnail adjacent to file upload control.
+    $(id).change(function() {
+        var reader = new FileReader();
+        var fileupload_element = $(this);
+        reader.onload = function(event) {
+            var ext = $(id)[0].files[0].name.split('.').pop();
+            var file_name = $(id)[0].files[0].name;
+
+            if (file_name.length >= 15) {
+                file_name = file_name.substring(0, 15) + '...'
+            }
+            var file_src = event.target.result
+            var icon_class = ''
+            var element_tag = '<span class="[[thumbnail_icon]]"></span>';
+            var thumbnail_container = '<div class="thumbnail_container col-sm-4">[[element_tag]]<span>' +
+                file_name + '</span><span class="close"></span></div>'
+
+            switch (ext.toLowerCase()) {
+                case "png":
+                case "jpeg":
+                case "bmp":
+                case "gif":
+                case "jpg":
+                    element_tag = ' <img src="[[file_src]]" />'
+                    break;
+                case "pdf":
+                    icon_class = 'fa fa-file-pdf-o fa-3x'
+                    break;
+                case "doc":
+                case "docx":
+                    icon_class = 'fa fa-file-word-o fa-3x'
+                    break;
+                default:
+                    icon_class = 'fa fa-file fa-3x'
+                    break;
+            };
+
+            thumbnail_container = thumbnail_container.replace('[[element_tag]]', element_tag);
+            thumbnail_container = thumbnail_container.replace('[[file_src]]', file_src);
+            thumbnail_container = thumbnail_container.replace('[[thumbnail_icon]]', icon_class);
+            $(".thumbnail_container").remove()
+
+            fileupload_element.parent().append(thumbnail_container);
+
+            $(".thumbnail_container .close").click(function(e) {
+                $(id)[0].value = '';
+                $(this).parent().remove();
+            });
+        }
+        reader.readAsDataURL($(id)[0].files[0]);
+    });
+}
+</script>
+{% endblock %}
+      

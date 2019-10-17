@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/fullcalendar.min.css" %}">
+<link rel="stylesheet" href="{% static "css/fullcalendar.print.min.css" %} media="print"">
+{% endblock css %}
+
+{% block content %}
+
+<section class="content">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="box box-solid">
+          <div class="box-header with-border">
+            <h4 class="box-title">YOUR EVENTS</h4>
+          </div>
+          <div class="box-body">
+            <div id="external-events">
+              {% for event in events %}
+              <div class="external-event " style="background-color:{{event.event_class}}">{{event.title}}
+                  <a href="{% url 'social:delete_events' event.pk %}">Delete</a>
+              </div>
+              {% endfor%}
+              <div class="checkbox">
+                <label for="drop-remove">
+                  <input type="checkbox" id="drop-remove">
+                  remove after drop
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title">Create Event</h3>
+          </div>
+          <div class="box-body">
+            <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+              <ul class="fc-color-picker" id="color-chooser">
+                <li><a class="text-aqua" data="bg-aqua" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-blue" data="bg-blue" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-light-blue" data="bg-light-blue" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-teal" data="bg-teal" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-yellow" data="bg-yellow" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-orange" data="bg-orange" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-green" data="bg-green" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-lime" data="bg-lime" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-red" data="bg-red" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-purple" data="bg-purple" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-fuchsia" data="bg-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-muted" data="bg-muted" href="#"><i class="fa fa-square"></i></a></li>
+                <li><a class="text-navy" data="bg-navy" href="#"><i class="fa fa-square"></i></a></li>
+              </ul>
+            </div>
+            <div class="input-group">
+              <form method="post" enctype="multipart/form-data" class="event_form">
+                  {% csrf_token %}
+                  {{ form.title }}            
+                  {{ form.event_class }}
+                  {{ form.event_detail }}
+                  {{ form.start_date }}            
+                  {{ form.end_date }}  
+                  <button id="add-new-event" type="submit" class="btn btn-primary btn-flat">Add</button> 
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="box box-primary">
+          <div class="box-body no-padding">
+            <div id="calendar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<script>
+  var evnt=[];
+$(document).ready(function () {
+
+
+    $.ajax({
+        url: "/api/event-list",
+        type: "Get",
+        success: function (data) {
+          var evnt=data.events;               
+          function init_events(ele) {
+            ele.each(function () {
+              var eventObject = {
+                title: $.trim($(this).text()) 
+              }   
+              $(this).data('eventObject', eventObject)     
+            })
+          }
+    init_events($('#external-events div.external-event'))
+   
+    var date = new Date()
+    var d    = date.getDate(),
+        m    = date.getMonth(),
+        y    = date.getFullYear()
+    
+    $('#calendar').fullCalendar({
+      header    : {
+        left  : 'prev,next today',
+        center: 'title',
+        right : 'month,agendaWeek,agendaDay'
+      },
+      buttonText: {
+        today: 'today',
+        month: 'month',
+        week : 'week',
+        day  : 'day'
+      },
+      events    : evnt,
+      editable  : false,
+      droppable : false, 
+     
+    })
+  },    
+  });
+    $('#color-chooser > li > a').click(function (e) {
+      e.preventDefault()
+      currColor = $(this).attr("data");
+      currColors = $(this).css('color')
+      $('#id_event_class').val(currColors)
+      var currColors = '#3c8dbc'
+      currColors = $(this).css('color')
+      $('#add-new-event').css({ 'background-color': currColors, 'border-color': currColors })
+    })  
+    $(".fc-content ").bind("click",function(){
+  alert("File is changed.");
+}); 
+  });
+  $(function () {
+    flatpickr("#id_start_date", {
+      dateFormat: "Y-m-d H:i",
+      enableTime: true
+    });
+    flatpickr("#id_end_date", {
+      dateFormat: "Y-m-d H:i",
+      enableTime: true
+    });
+  });
+
+
+  $(".fc-event-container").click(function(){
+      alert("zdjk")
+    $('#myModal').modal('toggle');
+  });
+</script>
+{% endblock %}

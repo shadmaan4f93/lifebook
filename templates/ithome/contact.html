@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="icon-center">
+    <img src="{% static "Images/contact-us-pink.png" %}" alt="My image"/>
+    <h1>Contact Us</h1>
+</div>
+
+<form method='POST'  action='' id='ContactForm'>
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group vertical">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div> 
+       </div>
+       <div class="col-md-6">
+            <div class="input-group vertical">
+                <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                {{ form.phone.errors }}
+            </div>
+        </div>
+    </div>                  
+        <div class="input-group vertical">
+            {{ form.comments }}
+            {{ form.comments.errors }}
+        </div>                  
+    <div class="button-row LoadMore">
+        <button type="submit" class="button secondary">Submit</button>
+    </div>
+</form>
+{% endblock %}
+
+
